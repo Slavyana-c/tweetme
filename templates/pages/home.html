@@ -5,9 +5,16 @@
 {% endblock head_title %}
 
 {% block content %}
-    <h1>Welcome to Tweetme</h1>
 
-    <div id="tweets">
+    <div class="row text-center">
+        <div class="col">
+            <h1>Welcome to Tweetme</h1>
+        </div>
+    </div>
+
+
+
+    <div class="row" id="tweets">
         Loading...
     </div>
 
@@ -37,7 +44,7 @@
     }
 
     function formatTweetElement(tweet) {
-        let formattedTweet = "<div class='mb-4' id='tweet-" + tweet.id
+        let formattedTweet = "<div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4' id='tweet-" + tweet.id
             +"'><p>" + tweet.content
             + "</p><div class='btn-group'>" + LikeBtn(tweet)
             + "</div></div>";
