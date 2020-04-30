@@ -36,7 +36,7 @@ def tweet_create_view(request, *args, **kwargs):
 @api_view(['GET'])
 def tweet_detail_view(request, tweet_id, *args, **kwargs):
     qs = Tweet.objects.filter(id=tweet_id)
-    if not qs.exists:
+    if not qs.exists():
         return Response({}, status=404)
     obj = qs.first()
     serializer = TweetSerializer(obj)
