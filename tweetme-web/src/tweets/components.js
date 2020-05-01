@@ -19,26 +19,37 @@ export function TweetsList(props) {
     }, []);
 
     return tweets.map((item, index) => {
-                        return <Tweet tweet={item} className='my-5 py-5 border bg-white text-dark'
-                                      key={index - item.id}/>
-                    })
+        return <Tweet tweet={item} className='my-5 py-5 border bg-white text-dark'
+                      key={`${index} - ${item.id}`}/>
+    })
 }
 
 export function ActionBtn(props) {
     const {tweet, action} = props;
-    const className = props.className ? props.className : 'btn btn-primary btn-sm'
-    return action.type === 'like' ? <button className={className} >{tweet.likes} Likes</button> : null
+    const className = props.className ? props.className : 'btn btn-primary btn-sm';
+    const actionDisplay = action.display ? action.display : 'Action';
+    const display = action.type === 'like' ? `${tweet.likes} ${actionDisplay}` : action.display;
+
+    const handleClick = (event) => {
+        event.preventDefault();
+        if (action.type === 'like') {
+            console.log(tweet.likes + 1)
+        }
+
+    };
+    return <button className={className} onClick={handleClick}>{display}</button>
 }
 
 
 export function Tweet(props) {
     const {tweet} = props;
-    const className = props.className ? props.className : 'col-10 mx-auto col-md-6'
+    const className = props.className ? props.className : 'col-10 mx-auto col-md-6';
     return <div className={className}>
         <p>{tweet.content}</p>
         <div className={'btn btn-group'}>
-          <ActionBtn tweet={tweet} action={{type:'like'}}/>
-          <ActionBtn tweet={tweet} action={{type:'unlike'}}/>
+            <ActionBtn tweet={tweet} action={{type: 'like', display: "Likes"}}/>
+            <ActionBtn tweet={tweet} action={{type: 'unlike', display: "Unlike"}}/>
+            <ActionBtn tweet={tweet} action={{type: 'retweet', display: "Retweet"}}/>
         </div>
     </div>
 }
