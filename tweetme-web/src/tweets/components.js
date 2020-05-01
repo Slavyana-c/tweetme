@@ -5,10 +5,18 @@ export function TweetsComponent(props) {
 
     const textAreaRef = React.createRef();
 
+    const [newTweets, setNewTweets] = useState([]);
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const newVal = textAreaRef.current.value;
-        console.log(newVal);
+        let tempNewTweets = [...newTweets];
+        tempNewTweets.unshift({
+            content: newVal,
+            likes: 0,
+            id: 123123
+        });
+        setNewTweets(tempNewTweets);
         textAreaRef.current.value = ' '
     };
 
@@ -22,19 +30,28 @@ export function TweetsComponent(props) {
 
             </form>
         </div>
-        <TweetsList/>
+        <TweetsList newTweets={newTweets}/>
 
     </div>
 }
 
 export function TweetsList(props) {
+    const [tweetsInit, setTweetsInit] = useState([]);
     const [tweets, setTweets] = useState([]);
 
 
     useEffect(() => {
+        const final = [...props.newTweets.concat(tweetsInit)];
+        if (final.length !== tweets.length) {
+            setTweets(final)
+        }
+
+    }, [props.newTweets, tweets, tweetsInit]);
+
+    useEffect(() => {
         const myCallback = (response, status) => {
             if (status === 200) {
-                setTweets(response)
+                setTweetsInit(response)
             } else {
                 console.log(response);
                 alert("There was an error")
