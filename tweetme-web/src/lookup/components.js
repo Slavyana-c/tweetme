@@ -24,25 +24,28 @@ function lookup(method, endpoint, callback, data) {
     const xhr = new XMLHttpRequest();
     const url = `http://localhost:8000/api${endpoint}`;
     xhr.responseType = 'json';
-    xhr.open(method, url);
     const csrftoken = getCookie('csrftoken');
+    console.log(csrftoken)
+    xhr.open(method, url);
     xhr.setRequestHeader("Content-Type", "application/json");
-
     if (csrftoken) {
         xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest");
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         xhr.setRequestHeader("X-CSRFToken", csrftoken);
-
     }
     xhr.onload = function () {
         callback(xhr.response, xhr.status)
-
     };
     console.log(xhr.response);
+    console.log(3);
+
 
     xhr.onerror = function () {
         callback({"message": "There was an error with the request"}, 400)
+        console.log(400);
+
     };
+    console.log(jsonData)
     xhr.send(jsonData)
 
 }

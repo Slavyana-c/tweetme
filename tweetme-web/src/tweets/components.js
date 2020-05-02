@@ -7,21 +7,27 @@ export function TweetsComponent(props) {
 
     const [newTweets, setNewTweets] = useState([]);
 
+    const handleBackendUpdate = (response, status) => {
+        // backend api response handler
+        let tempNewTweets = [...newTweets];
+        if (status === 201) {
+            tempNewTweets.unshift(response);
+            setNewTweets(tempNewTweets);
+
+        } else {
+            console.log(response);
+            alert("An error occurred. Please try again.")
+        }
+
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const newVal = textAreaRef.current.value;
-        let tempNewTweets = [...newTweets];
-        createTweet(newVal, (response, status) => {
-            if (status === 201) {
-                tempNewTweets.unshift(response);
-            } else {
-                console.log(response)
-                alert("An error occurred. Please try again.")
-            }
 
-        });
+        // backend api request
+        createTweet(newVal, handleBackendUpdate)
 
-        setNewTweets(tempNewTweets);
         textAreaRef.current.value = ' '
     };
 
@@ -58,7 +64,7 @@ export function TweetsList(props) {
         if (tweetsDidSet === false) {
             const myCallback = (response, status) => {
                 if (status === 200) {
-                    setTweetsInit(response)
+                    setTweetsInit(response);
                     setTweetsDidSet(true)
                 } else {
                     console.log(response);
