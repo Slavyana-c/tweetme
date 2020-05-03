@@ -146,7 +146,7 @@ DEFAULT_AUTHENTICATION_CLASSES = ['rest_framework.authentication.SessionAuthenti
 
 if DEBUG:
     DEFAULT_RENDERER_CLASSES += ['rest_framework.renderers.BrowsableAPIRenderer']
-    DEFAULT_AUTHENTICATION_CLASSES += ['tweetme.rest-api.dev.DevAuthentication']
+    # DEFAULT_AUTHENTICATION_CLASSES += ['tweetme.rest-api.dev.DevAuthentication']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': DEFAULT_AUTHENTICATION_CLASSES ,
