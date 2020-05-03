@@ -3,19 +3,25 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {TweetsComponent} from "./tweets";
+import {TweetsComponent, TweetDetailComponent} from "./tweets";
 
-const appEl = document.getElementById('root')
+const appEl = document.getElementById('root');
 if(appEl) {
     ReactDOM.render(<App/>, appEl);
 }
 
 // this way we pass all dataset elements to props, not just 1 by 1
-const e = React.createElement
-const tweetsEl = document.getElementById('tweetme')
+const e = React.createElement;
+const tweetsEl = document.getElementById('tweetme');
 if(tweetsEl) {
     ReactDOM.render(e(TweetsComponent, tweetsEl.dataset), tweetsEl);
 }
+
+const tweetDetailElements = document.querySelectorAll(".tweetme-detail");
+tweetDetailElements.forEach(container => {
+         ReactDOM.render(e(TweetDetailComponent, container.dataset), container);
+
+});
 
 // ReactDOM.render(
 //   <React.StrictMode>

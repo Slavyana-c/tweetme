@@ -1,30 +1,20 @@
-import React, {useState} from "react";
-import {apiTweetCreate} from "./lookup";
+import React, {useEffect, useState} from "react";
+import {apiTweetDetail} from "./lookup";
 import {TweetsList} from "./list";
 import {TweetCreate} from "./create";
+import {Tweet} from "./detail";
 
 export function TweetsComponent(props) {
-    const textAreaRef = React.createRef();
 
     const [newTweets, setNewTweets] = useState([]);
 
-    const canTweet = props.canTweet === 'false' ? false : true
+    const canTweet = props.canTweet === 'false' ? false : true;
 
     const handleBackendUpdate = (response, status) => {
         // backend api response handler
         let tempNewTweets = [...newTweets];
         tempNewTweets.unshift(response);
         setNewTweets(tempNewTweets)
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const newVal = textAreaRef.current.value;
-
-        // backend api request
-        apiTweetCreate(newVal, handleBackendUpdate);
-
-        textAreaRef.current.value = ' '
     };
 
     return <div className={props.className}>
@@ -36,3 +26,28 @@ export function TweetsComponent(props) {
     </div>
 }
 
+export function TweetDetailComponent(props) {
+    const {tweetId} = props;
+    const [didLookup, setDidLookup] = useState(false);
+    const [tweet, setTweet] = useState(null)
+
+
+    const handleBackendLookup = (response, status) => {
+        if(status === 200) {
+            setTweet(response)
+        } else {
+            alert("There was an error finding your tweet.")
+        }
+    };
+
+    useEffect(() => {
+        if (didLookup === false) {
+            apiTweetDetail(tweetId, handleBackendLookup);
+            setDidLookup(true)
+        }
+
+    }, [tweetId, didLookup, setDidLookup]);
+
+    return tweet === null ? null : <Tweet tweet={tweet} className={props.className}/>
+
+}
