@@ -39,7 +39,12 @@ class TweetTestCase(TestCase):
         client = self.get_client()
         response = client.post('/api/tweets/action/', {'id': 1, 'action': 'like'})
         like_count = response.json().get('likes')
+        user = self.user
+        my_like_instances_count = user.tweetlike_set.count()
+        my_related_likes = user.tweet_user.count()
         self.assertEqual(like_count, 1)
+        self.assertEqual(my_like_instances_count, 1)
+        self.assertEqual(my_like_instances_count, my_related_likes)
 
     def test_action_unlike(self):
         client = self.get_client()
@@ -87,3 +92,7 @@ class TweetTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
         response_incorrect_owner = client.delete('/api/tweets/3/delete/')
         self.assertEqual(response_incorrect_owner.status_code, 401)
+
+    def test_tweet_related_names(self):
+        user = self.user
+        self.assertEqual(self.user.tweets.count(), 2)
