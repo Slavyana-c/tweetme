@@ -9,13 +9,14 @@ def login_view(request, *args, **kwargs):
 
     # if you have your own form
     # form = MyModelForm(request.POST or None )
-
     if form.is_valid():
         # username = form.cleaned_data.get('username')
         # user_ = authenticate(username, password)
         user_ = form.get_user()
         login(request, user_)
         return redirect('/')
+
+    # user = authenticate(request, username=username, password=password)
     context = {
         'form': form,
         'btn_label': 'Login',
@@ -43,10 +44,12 @@ def logout_view(request, *args, **kwargs):
 def register_view(request, *args, **kwargs):
     form = UserCreationForm(request.POST or None)
 
+    print(form.is_valid())
     if form.is_valid():
-        user = form.save(commit=True)
-        user.set_password(form.cleaned_data.get('password1'))
-        # send confirmation email here
+        form.save()
+        username = form.cleaned_data.get('username')
+        raw_password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=raw_password)
         login(request, user)
         return redirect('/')
         # print(form.cleaned_data)
