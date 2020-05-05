@@ -2,6 +2,8 @@ from django.test import TestCase
 
 # Create your tests here.
 from django.contrib.auth import get_user_model
+from rest_framework.test import APIClient
+
 from .models import Profile
 
 User = get_user_model()
@@ -26,3 +28,41 @@ class ProfileTestCase(TestCase):
         self.assertTrue(qs.exists())
         self.assertFalse(first_user_following_no_one.exists())
 
+    def get_client(self):
+        # Make all requests in the context of a logged in session.
+        client = APIClient()
+        client.login(username=self.user.username, password='somepassword')
+        return client
+
+    def test_follow_api_endpoint(self):
+        client = self.get_client()
+        response = client.post(f'/api/profiles/{self.userb.username}/follow',
+                               {"action": "follow"}
+                               )
+
+        r_data = response.json()
+        count = r_data.get('count')
+        self.assertEqual(count, 1)
+
+    def test_unfollow_api_endpoint(self):
+        client = self.get_client()
+        first = self.user
+        second = self.userb
+        first.profile.followers.add(second)
+        response = client.post(f'/api/profiles/{self.userb.username}/follow',
+                               {"action": "unfollow"}
+                               )
+
+        r_data = response.json()
+        count = r_data.get('count')
+        self.assertEqual(count, 0)
+
+    def test_cannot_follow_api_endpoint(self):
+        client = self.get_client()
+        response = client.post(f'/api/profiles/{self.user.username}/follow',
+                               {"action": "follow"}
+                               )
+
+        r_data = response.json()
+        count = r_data.get('count')
+        self.assertEqual(count, 0)
