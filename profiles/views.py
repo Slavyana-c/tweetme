@@ -12,11 +12,11 @@ def profile_update_view(request, *args, **kwargs):
     user_data = {
         'first_name': user.first_name,
         'last_name': user.last_name,
-        'email': user.email
+        'email': user.email,
     }
     my_profile = request.user.profile
     # pass with instance if model view
-    form = UserProfileForm(request.POST or None, instance=my_profile, initial=user_data)
+    form = ProfileForm(request.POST or None, instance=my_profile, initial=user_data)
     if form.is_valid():
         profile_obj = form.save(commit=False)
         first_name = form.cleaned_data.get('first_name')

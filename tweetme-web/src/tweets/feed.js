@@ -55,7 +55,7 @@ export function FeedList(props) {
                 }
 
             };
-            apiTweetFeed(props.username, handleLoadNextResponse, nextUrl)
+            apiTweetFeed(handleLoadNextResponse, nextUrl)
         }
 
 
